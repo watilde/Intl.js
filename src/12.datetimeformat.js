@@ -689,23 +689,18 @@ function BestFitFormatMatcher (options, formats) {
                 // 4. Let delta be max(min(formatPropIndex - optionsPropIndex, 2), -2).
                 let delta = Math.max(Math.min(formatPropIndex - optionsPropIndex, 2), -2);
 
-                {
-                    // diverging from spec
-                    // When the bestFit argument is true, subtract additional penalty where data types are not the same
-                    if ((formatPropIndex <= 1 && optionsPropIndex >= 2) || (formatPropIndex >= 2 && optionsPropIndex <= 1)) {
-                        // 5. If delta = 2, decrease score by longMorePenalty.
-                        if (delta > 0)
-                            score -= longMorePenalty;
-                        else if (delta < 0)
-                            score -= longLessPenalty;
-                    } else {
-                        // 5. If delta = 2, decrease score by longMorePenalty.
-                        if (delta > 1)
-                            score -= shortMorePenalty;
-                        else if (delta < -1)
-                            score -= shortLessPenalty;
-                    }
-                }
+                // 5. If delta = 2, decrease score by longMorePenalty.
+                if (delta === 2)
+                    score -= longMorePenalty;
+                // 6. Else if delta = 1, decrease score by shortMorePenalty.
+                else if (delta === 1)
+                    score -= shortMorePenalty;
+                // 7. Else if delta = -1, decrease score by shortLessPenalty.
+                else if (delta === -1)
+                    score -= shortLessPenalty;
+                // 8. Else if delta = -2, decrease score by longLessPenalty.
+                else if (delta === -2)
+                    score -= longLessPenalty;
             }
         }
 
